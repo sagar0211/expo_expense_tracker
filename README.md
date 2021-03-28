@@ -6,9 +6,8 @@
   - `cd` into the project 
   - Install node module and dependencies : `npm i` or `yarn`
   - ✅ `yarn start`
-  - Press a to open on Android emulator
+  - Press a to run application on Android emulator
     
   ### Or 
-    -Download expo application in your android smart phone 
-    - Then `Scan QR code` from your device(Expo app) which is visible in console
+    - `Scan the QR code` which is visible in console with `Expo Go` (Android) or the `Camera app` (iOS) 
 
