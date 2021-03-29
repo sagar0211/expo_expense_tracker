@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet, Dimensions, TextInput } from "react-native";
+const axios = require('axios');
 import {
   BorderlessButton,
   TouchableOpacity,
@@ -10,6 +11,7 @@ import theme, { Box, Text } from "../../components/theme";
 import { BackArrow } from "../Svgs";
 import { addTransaction } from "../../../store/actions/transactionActions";
 import { useDispatch } from "react-redux";
+const API = "http://expensetracker-env.eba-jg9fuhwx.ap-south-1.elasticbeanstalk.com"
 
 /* Dimension */
 const { width, height } = Dimensions.get("window");
@@ -37,11 +39,23 @@ const Add = ({ navigation }) => {
     navigation.dispatch(popAction);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const transaction = {
       price,
       title,
     };
+
+    const options = {
+        method: 'post',
+        url:  `${API}/add`,
+        data: {
+            amount: price,
+            type: 1,
+            title:title
+        },
+        json:true
+    };
+    const response = await axios(options)
 
     if (!price || !title) return alert("Details Empty");
 
