@@ -37,6 +37,7 @@ const Transactions = ({ navigation }) => {
       if (!acc[item.addedtime])
         acc[item.addedtime] = {
           title: item.addedtime,
+          symbol:item.symbol,
           data: [],
           price: item.price,
         };

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, Dimensions, TextInput } from "react-native";
+import { StyleSheet, Dimensions, TextInput, Picker } from "react-native";
 import {
-  BorderlessButton,
-  TouchableOpacity,
+    BorderlessButton,
+    TouchableOpacity,
 } from "react-native-gesture-handler";
 import { StackActions } from "@react-navigation/native";
 
@@ -15,123 +15,138 @@ import { useDispatch } from "react-redux";
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    zIndex: 3,
-    paddingTop: 40,
-    padding: theme.spacing.l,
-    bottom: 0,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "white",
+        zIndex: 3,
+        paddingTop: 40,
+        padding: theme.spacing.l,
+        bottom: 0,
+    },
 });
 
 const Add = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const { navigate } = navigation;
-  const [price, setPrice] = useState("");
-  const [title, setTitle] = useState("");
-  const titleRef = useRef(null);
+    const dispatch = useDispatch();
+    const { navigate } = navigation;
+    const [price, setPrice] = useState("");
+    const [title, setTitle] = useState("");
+    const [symbol, setSymbol] = useState("");
 
-  const onPop = () => {
-    const popAction = StackActions.pop(1);
-    navigation.dispatch(popAction);
-  };
+    const titleRef = useRef(null);
 
-  const onSubmit = () => {
-    const transaction = {
-      price,
-      title,
+
+    const onPop = () => {
+        const popAction = StackActions.pop(1);
+        navigation.dispatch(popAction);
     };
 
-    if (!price || !title) return alert("Details Empty");
+    const onSubmit = () => {
+        const transaction = {
+            price,
+            title,
+            symbol
+        };
 
-    dispatch(addTransaction(transaction));
-    setPrice("");
-    setTitle("");
-    navigate("Transactions");
-  };
+        if (!price || !title || !symbol) return alert("Details Empty");
 
-  return (
-    <Box padding="l" flex={1}>
-      <Box flexDirection="row" alignItems="center" paddingTop="l">
-        <TouchableOpacity onPress={onPop}>
-          <Box>
-            <BackArrow />
-          </Box>
-        </TouchableOpacity>
+        dispatch(addTransaction(transaction));
+        setPrice("");
+        setTitle("");
+        setSymbol("")
+        navigate("Transactions");
+    };
+    console.log(symbol)
+    return (
+        <Box padding="l" flex={1}>
+            <Box flexDirection="row" alignItems="center" paddingTop="l">
+                <TouchableOpacity onPress={onPop}>
+                    <Box>
+                        <BackArrow />
+                    </Box>
+                </TouchableOpacity>
 
-        <Text
-          variant="title1"
-          color="primary2"
-          style={{ marginLeft: 30, fontSize: 18 }}
-        >
-          Add Amount
+                <Text
+                    variant="title1"
+                    color="primary2"
+                    style={{ marginLeft: 30, fontSize: 18 }}
+                >
+                    Add Amount
         </Text>
-      </Box>
+            </Box>
 
-      <Box flexDirection="row" flexDirection="column" marginTop="xl">
-        <Box
-          justifyContent="space-between"
-          flexDirection="row"
-          alignItems="center"
-          borderBottomWidth={2}
-          paddingBottom="s"
-          marginTop="m"
-        >
-          <Text variant="title" color="primary">
-            Rs
+
+            <Box flexDirection="row" flexDirection="column" marginTop="xl">
+                <Picker
+                    selectedValue={symbol}
+                    style={{ height: 20, width: 300 }}
+                    onValueChange={(symbol) => setSymbol(symbol)}
+                >   
+                    <Picker.Item label="Please Select ------" value={0} />
+                    <Picker.Item label="Income" value={1} />
+                    <Picker.Item label="Expense" value={-1} />
+                </Picker>
+                <Box
+                    justifyContent="space-between"
+                    flexDirection="row"
+                    alignItems="center"
+                    borderBottomWidth={2}
+                    paddingBottom="s"
+                    marginTop="m"
+                >
+                    <Text variant="title" color="primary">
+                        Rs
           </Text>
 
-          <TextInput
-            placeholderTextColor={theme.colors.primary}
-            placeholder="Amount"
-            keyboardType="number-pad"
-            style={{
-              padding: 5,
-              fontSize: 40,
-              fontFamily: "RRegular",
-              width: "80%",
-            }}
-            onChangeText={(price) => setPrice(price)}
-            autoFocus={true}
-            onSubmitEditing={() => titleRef.current.focus()}
-            defaultValue={price}
-          />
+                    <TextInput
+                        placeholderTextColor={theme.colors.primary}
+                        placeholder="Amount"
+                        keyboardType="number-pad"
+                        style={{
+                            padding: 5,
+                            fontSize: 40,
+                            fontFamily: "RRegular",
+                            width: "80%",
+                        }}
+                        onChangeText={(price) => setPrice(price)}
+                        autoFocus={true}
+                        onSubmitEditing={() => titleRef.current.focus()}
+                        defaultValue={price}
+                    />
 
-          
-        </Box>
 
-        <Box marginTop="xl" borderBottomWidth={2}>
-          <TextInput
-            ref={titleRef}
-            placeholderTextColor={theme.colors.primary}
-            placeholder="Expenses made for"
-            defaultValue={title}
-            style={{
-              fontSize: 30,
-              fontFamily: "RRegular",
-              width: "80%",
-            }}
-            onChangeText={(title) => setTitle(title)}
-          />
-        </Box>
+                </Box>
 
-        <Box marginTop="xl">
-          <BorderlessButton onPress={onSubmit}>
-            <Box
-              borderRadius="l"
-              height={55}
-              backgroundColor="primary"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Text variant="title1">Submit</Text>
+                <Box marginTop="xl" borderBottomWidth={2}>
+                    <TextInput
+                        ref={titleRef}
+                        placeholderTextColor={theme.colors.primary}
+                        placeholder="Expenses made for"
+                        defaultValue={title}
+                        style={{
+                            fontSize: 30,
+                            fontFamily: "RRegular",
+                            width: "80%",
+                        }}
+                        onChangeText={(title) => setTitle(title)}
+                    />
+                </Box>
+
+                <Box marginTop="xl">
+                    <BorderlessButton onPress={onSubmit}>
+                        <Box
+                            borderRadius="l"
+                            height={55}
+                            backgroundColor="primary"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Text variant="title1">Submit</Text>
+                        </Box>
+                    </BorderlessButton>
+                </Box>
             </Box>
-          </BorderlessButton>
         </Box>
-      </Box>
-    </Box>
-  );
+    );
 };
 
 export default Add;

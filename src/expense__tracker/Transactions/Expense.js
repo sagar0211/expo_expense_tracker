@@ -54,7 +54,7 @@ const Expense = ({ index, transition, onTap, onDelete, item, allDates }) => {
                 <Animated.Text
                   style={{
                     opacity: hidePrice,
-                    color: item.price > 0 ? "#009BFC" : "#FF4500",
+                    color: item.symbol == 1 ? "#009BFC" : "#FF4500",
                   }}
                 >
                   {item.price > 0
