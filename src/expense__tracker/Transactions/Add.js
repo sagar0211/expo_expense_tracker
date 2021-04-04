@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, Dimensions, TextInput, Picker } from "react-native";
+import { StyleSheet, Dimensions, TextInput,Picker } from "react-native";
+const axios = require('axios');
 import {
     BorderlessButton,
     TouchableOpacity,
@@ -10,6 +11,7 @@ import theme, { Box, Text } from "../../components/theme";
 import { BackArrow } from "../Svgs";
 import { addTransaction } from "../../../store/actions/transactionActions";
 import { useDispatch } from "react-redux";
+const API = "http://expensetracker-env.eba-jg9fuhwx.ap-south-1.elasticbeanstalk.com"
 
 /* Dimension */
 const { width, height } = Dimensions.get("window");
@@ -25,22 +27,23 @@ const styles = StyleSheet.create({
     },
 });
 
+
+
 const Add = ({ navigation }) => {
-    const dispatch = useDispatch();
-    const { navigate } = navigation;
-    const [price, setPrice] = useState("");
-    const [title, setTitle] = useState("");
-    const [symbol, setSymbol] = useState("");
+  const dispatch = useDispatch();
+  const { navigate } = navigation;
+  const [price, setPrice] = useState("");
+  const [title, setTitle] = useState("");
+  const [symbol, setSymbol] = useState("");
 
-    const titleRef = useRef(null);
+  const titleRef = useRef(null);
 
+  const onPop = () => {
+    const popAction = StackActions.pop(1);
+    navigation.dispatch(popAction);
+  };
 
-    const onPop = () => {
-        const popAction = StackActions.pop(1);
-        navigation.dispatch(popAction);
-    };
-
-    const onSubmit = () => {
+  const onSubmit = async() => {
         const transaction = {
             price,
             title,
@@ -49,28 +52,41 @@ const Add = ({ navigation }) => {
 
         if (!price || !title || !symbol) return alert("Details Empty");
 
-        dispatch(addTransaction(transaction));
-        setPrice("");
-        setTitle("");
-        setSymbol("")
-        navigate("Transactions");
+    const options = {
+        method: 'post',
+        url:  `${API}/add`,
+        data: {
+            amount: price,
+            type: symbol,
+            title:title
+        },
+        json:true
     };
-    console.log(symbol)
-    return (
-        <Box padding="l" flex={1}>
-            <Box flexDirection="row" alignItems="center" paddingTop="l">
-                <TouchableOpacity onPress={onPop}>
-                    <Box>
-                        <BackArrow />
-                    </Box>
-                </TouchableOpacity>
+    const response = await axios(options)
 
-                <Text
-                    variant="title1"
-                    color="primary2"
-                    style={{ marginLeft: 30, fontSize: 18 }}
-                >
-                    Add Amount
+
+    dispatch(addTransaction(transaction));
+    setPrice("");
+    setTitle("");
+    setSymbol("")
+    navigate("Transactions");
+  };
+
+  return (
+    <Box padding="l" flex={1}>
+      <Box flexDirection="row" alignItems="center" paddingTop="l">
+        <TouchableOpacity onPress={onPop}>
+          <Box>
+            <BackArrow />
+          </Box>
+        </TouchableOpacity>
+
+        <Text
+          variant="title1"
+          color="primary2"
+          style={{ marginLeft: 30, fontSize: 18 }}
+        >
+          Add Amount
         </Text>
             </Box>
 

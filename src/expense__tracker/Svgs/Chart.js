@@ -12,7 +12,7 @@ export default ({}) => {
       <G
         data-name="Chart view"
         fill="none"
-        stroke="#fff"
+        stroke="black"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit={10}
